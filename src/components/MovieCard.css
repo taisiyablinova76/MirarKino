@@ -1,0 +1,67 @@
+.movie-card {
+  background: #141111;
+  border-radius: 24px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 1px solid #2f1c1c;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.movie-card:hover {
+  transform: translateY(-8px);
+  border-color: #6a1e1e;
+  box-shadow: 0 15px 30px rgba(100, 20, 20, 0.3);
+}
+
+.poster {
+  height: 320px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 2rem;
+  background: linear-gradient(145deg, #2c1414 0%, #1f0f0f 100%);
+  transition: 0.3s;
+}
+
+.poster span {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #d47b7b;
+  text-align: center;
+  backdrop-filter: blur(5px);
+  border: 1px solid #6a1e1e;
+}
+
+.movie-card:hover .poster {
+  transform: scale(1.02);
+}
+
+.movie-title {
+  padding: 1rem;
+  font-weight: 600;
+  color: #eacece;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.movie-year {
+  color: #a16565;
+  font-weight: 400;
+  margin-left: 0.5rem;
+  font-size: 0.85rem;
+}
+
+/* Стили для постеров (остаются те же, что и в оригинальном style.css) */
+.poster-1 { background-image: linear-gradient(145deg, #3a2a2a 0%, #1f1212 100%); }
+.poster-2 { background-image: linear-gradient(145deg, #2a3a2a 0%, #121f12 100%); }
+.poster-3 { background-image: linear-gradient(145deg, #2a2a3a 0%, #12121f 100%); }
+.poster-4 { background-image: linear-gradient(145deg, #3a2a3a 0%, #1f121f 100%); }
+.poster-5 { background-image: linear-gradient(145deg, #3a3a2a 0%, #1f1f12 100%); }
+.poster-6 { background-image: linear-gradient(145deg, #2a3a3a 0%, #121f1f 100%); }

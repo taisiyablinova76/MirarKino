@@ -1,0 +1,132 @@
+.player-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(12px);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.player-container {
+  width: 90%;
+  max-width: 1200px;
+  background: #000000;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(100, 20, 20, 0.5);
+  border: 2px solid #6a1e1e;
+}
+
+.video-placeholder {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  background: #0f0c0c;
+}
+
+.fake-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #1a1111 0%, #0f0c0c 100%);
+  cursor: pointer;
+  transition: 0.3s;
+  z-index: 2;
+}
+
+.fake-player:hover {
+  background: #2a1818;
+  transform: scale(1.02);
+}
+
+.play-icon {
+  font-size: 5rem;
+  color: #d47b7b;
+  filter: drop-shadow(0 0 15px #6a1e1e);
+  margin-bottom: 1rem;
+  transition: 0.2s;
+}
+
+.fake-player:hover .play-icon {
+  transform: scale(1.1);
+}
+
+.player-meta {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #eacece;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+.player-subtitle {
+  color: #a16565;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+}
+
+.real-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  z-index: 1;
+}
+
+.close-player {
+  margin-top: 2rem;
+  background: #831e1e;
+  color: #f0e0e0;
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: 40px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.2s;
+  border: 1px solid #b54545;
+}
+
+.close-player:hover {
+  background: #9f2a2a;
+  transform: scale(1.02);
+}
+
+@media (max-width: 768px) {
+  .player-container {
+    width: 95%;
+  }
+  
+  .player-meta {
+    font-size: 1.2rem;
+  }
+  
+  .play-icon {
+    font-size: 3rem;
+  }
+}

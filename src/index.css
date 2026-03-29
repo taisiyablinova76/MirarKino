@@ -1,0 +1,12 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: linear-gradient(145deg, #0f0c0c 0%, #1a1111 100%);
+  color: #eacece;
+  overflow-x: hidden;
+}

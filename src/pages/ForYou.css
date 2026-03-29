@@ -1,0 +1,30 @@
+.recommendation-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.recommendation-badge {
+  background: linear-gradient(145deg, #2c1414 0%, #1f0f0f 100%);
+  border: 1px solid #8b1e1e;
+  border-radius: 40px;
+  padding: 0.4rem 1.5rem;
+  font-size: 1rem;
+  color: #d47b7b;
+}
+
+.personalized-note {
+  background: rgba(139, 30, 30, 0.1);
+  border-left: 4px solid #8b1e1e;
+  padding: 1rem 2rem;
+  margin-bottom: 2rem;
+  border-radius: 0 12px 12px 0;
+  color: #c9b0b0;
+  font-size: 1.1rem;
+}
+
+.personalized-note span {
+  color: #d47b7b;
+  font-weight: 600;
+}
