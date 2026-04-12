@@ -2,31 +2,40 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import MoviePlayer from '../components/MoviePlayer';
 import { useAuth } from '../contexts/AuthContext';
-import { MOVIES, CLIPS, getMovie, toggleSaveMovie, checkSaved } from '../services/api';
+import { getClips, toggleSaveMovie, checkSaved, getMovie } from '../services/api';
 
 const Clips = () => {
   const { user } = useAuth();
   const [clips, setClips] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [savedStatus, setSavedStatus] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Загружаем клипы
-    setClips(CLIPS);
-    
-    // Загружаем сохраненные фильмы
-    if (user) {
-      const loadSavedStatus = async () => {
-        const status = {};
-        for (const clip of CLIPS) {
-          const result = await checkSaved(clip.movie_id);
-          status[clip.id] = result.saved;
-        }
-        setSavedStatus(status);
-      };
+    loadClips();
+  }, []);
+
+  useEffect(() => {
+    if (user && clips.length > 0) {
       loadSavedStatus();
     }
-  }, [user]);
+  }, [user, clips]);
+
+  const loadClips = async () => {
+    setLoading(true);
+    const clipsData = await getClips();
+    setClips(clipsData);
+    setLoading(false);
+  };
+
+  const loadSavedStatus = async () => {
+    const status = {};
+    for (const clip of clips) {
+      const result = await checkSaved(clip.movie_id);
+      status[clip.id] = result.saved;
+    }
+    setSavedStatus(status);
+  };
 
   const handleSave = async (clipId, movieId) => {
     if (!user) {
@@ -52,6 +61,17 @@ const Clips = () => {
   const handleClosePlayer = () => {
     setSelectedMovie(null);
   };
+
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <div style={{ textAlign: 'center', color: '#d47b7b', padding: '4rem' }}>
+          Загрузка клипов...
+        </div>
+      </>
+    );
+  }
 
   const containerStyle = {
     height: 'calc(100vh - 90px)',

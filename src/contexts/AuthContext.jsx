@@ -24,28 +24,43 @@ export const AuthProvider = ({ children }) => {
       const data = await checkAuth();
       if (data.authenticated) {
         setUser(data.user);
+      } else {
+        setUser(null);
       }
     } catch (error) {
       console.error('Auth check failed:', error);
+      setUser(null);
     } finally {
       setLoading(false);
     }
   };
 
   const login = async (credentials) => {
-    const data = await apiLogin(credentials);
-    if (data.success) {
-      setUser(data.user);
+    try {
+      const data = await apiLogin(credentials);
+      if (data.success) {
+        setUser(data.user);
+        return { success: true };
+      } else {
+        return { success: false, error: data.error };
+      }
+    } catch (error) {
+      return { success: false, error: error.error || 'Ошибка входа' };
     }
-    return data;
   };
 
   const register = async (userData) => {
-    const data = await registerUser(userData);
-    if (data.success) {
-      setUser(data.user);
+    try {
+      const data = await registerUser(userData);
+      if (data.success) {
+        setUser(data.user);
+        return { success: true };
+      } else {
+        return { success: false, error: data.error };
+      }
+    } catch (error) {
+      return { success: false, error: error.error || 'Ошибка регистрации' };
     }
-    return data;
   };
 
   const logout = async () => {

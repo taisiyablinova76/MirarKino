@@ -37,23 +37,24 @@ const Register = () => {
     }
 
     try {
-      const response = await register({
+      const result = await register({
         username: formData.username,
         email: formData.email,
         password: formData.password
       });
 
-      if (response.success) {
+      if (result.success) {
         setSuccess('Регистрация прошла успешно! Перенаправляем...');
         
         setTimeout(() => {
           navigate('/');
         }, 2000);
       } else {
-        setError(response.error || 'Ошибка при регистрации');
+        setError(result.error || 'Ошибка при регистрации');
       }
     } catch (err) {
-      setError(err.error || 'Ошибка при регистрации');
+      setError('Ошибка при регистрации. Проверьте подключение к серверу.');
+      console.error('Registration error:', err);
     }
   };
 
@@ -83,7 +84,8 @@ const Register = () => {
     borderRadius: '12px',
     color: '#f0e6e6',
     fontSize: '1rem',
-    marginBottom: '1rem'
+    marginBottom: '1rem',
+    outline: 'none'
   };
 
   const buttonStyle = {
@@ -96,7 +98,8 @@ const Register = () => {
     fontSize: '1.2rem',
     fontWeight: 700,
     cursor: 'pointer',
-    marginTop: '1rem'
+    marginTop: '1rem',
+    transition: '0.2s'
   };
 
   const errorStyle = {
@@ -130,11 +133,13 @@ const Register = () => {
           <form onSubmit={handleSubmit}>
             <input
               type="text"
-              placeholder="Имя пользователя"
+              placeholder="Имя пользователя (от 3 до 20 символов)"
               value={formData.username}
               onChange={(e) => setFormData({...formData, username: e.target.value})}
               style={inputStyle}
               required
+              minLength="3"
+              maxLength="20"
             />
             
             <input
@@ -148,11 +153,12 @@ const Register = () => {
             
             <input
               type="password"
-              placeholder="Пароль"
+              placeholder="Пароль (минимум 6 символов)"
               value={formData.password}
               onChange={(e) => setFormData({...formData, password: e.target.value})}
               style={inputStyle}
               required
+              minLength="6"
             />
             
             <input
@@ -171,7 +177,6 @@ const Register = () => {
                 checked={agreement}
                 onChange={(e) => setAgreement(e.target.checked)}
                 style={{ width: '18px', height: '18px' }}
-                required
               />
               <label htmlFor="agreement" style={{ color: '#c9b0b0', fontSize: '0.9rem' }}>
                 Я принимаю условия использования
@@ -182,6 +187,13 @@ const Register = () => {
               ЗАРЕГИСТРИРОВАТЬСЯ
             </button>
           </form>
+          
+          <div style={{ textAlign: 'center', marginTop: '2rem', color: '#8f6b6b' }}>
+            Уже есть аккаунт?
+            <a href="/login" style={{ color: '#d47b7b', marginLeft: '0.5rem', textDecoration: 'none' }}>
+              Войти
+            </a>
+          </div>
         </div>
       </main>
     </>

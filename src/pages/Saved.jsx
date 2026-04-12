@@ -4,22 +4,28 @@ import Header from '../components/Header';
 import MovieCard from '../components/MovieCard';
 import MoviePlayer from '../components/MoviePlayer';
 import { useAuth } from '../contexts/AuthContext';
-import { MOVIES } from '../services/api';
+import { getSavedMovies } from '../services/api';
 
 const Saved = () => {
   const { user } = useAuth();
   const [savedMovies, setSavedMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
-  const [hoveredId, setHoveredId] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (user) {
-      const saved = localStorage.getItem(`saved_${user.email}`);
-      const savedIds = saved ? JSON.parse(saved) : [];
-      const movies = savedIds.map(id => MOVIES[id]).filter(m => m);
-      setSavedMovies(movies);
+      loadSavedMovies();
+    } else {
+      setLoading(false);
     }
   }, [user]);
+
+  const loadSavedMovies = async () => {
+    setLoading(true);
+    const movies = await getSavedMovies();
+    setSavedMovies(movies);
+    setLoading(false);
+  };
 
   const containerStyle = {
     minHeight: 'calc(100vh - 90px)',
@@ -120,7 +126,20 @@ const Saved = () => {
     setSelectedMovie(null);
   };
 
-  // Если пользователь не авторизован, показываем форму входа
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <main style={containerStyle}>
+          <div style={{ textAlign: 'center', color: '#d47b7b', padding: '4rem' }}>
+            Загрузка сохраненных фильмов...
+          </div>
+        </main>
+      </>
+    );
+  }
+
+  // Если пользователь не авторизован
   if (!user) {
     return (
       <>

@@ -4,6 +4,7 @@ from models import db, User, Movie, Clip, WatchHistory, SavedMovie, LikedClip
 from datetime import datetime
 import hashlib
 
+
 def init_db(app):
     """Инициализация базы данных"""
     with app.app_context():

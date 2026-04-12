@@ -1,22 +1,25 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, send_from_directory
 from flask_cors import CORS
 from datetime import timedelta
 import hashlib
 import re
+import os
+from sqlalchemy import desc
 
 from models import db, User, Movie, Clip, WatchHistory, SavedMovie, LikedClip
 from database import init_db, hash_password
 from recommend import RecommendationSystem
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', static_url_path='')
 app.config['SECRET_KEY'] = 'your-secret-key-change-this-in-production'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///movies.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['SESSION_COOKIE_SECURE'] = False  # В production установите True
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
 
-CORS(app, supports_credentials=True, origins=['http://localhost:3000'])
+# CORS настройки (для разработки, если фронтенд на другом порту)
+CORS(app, supports_credentials=True, origins=['http://localhost:3000', 'http://localhost:5000'])
 db.init_app(app)
 
 # Инициализируем базу данных
@@ -167,6 +170,59 @@ def watch_movie(movie_id):
     
     return jsonify({'success': True})
 
+@app.route('/api/movies/trending')
+def get_trending_movies():
+    """Получение популярных фильмов"""
+    trending = RecommendationSystem.get_trending_movies()
+    return jsonify([movie.to_dict() for movie in trending])
+
+@app.route('/api/movies/top-rated')
+def get_top_rated_movies():
+    """Получение высокооцененных фильмов"""
+    top_rated = RecommendationSystem.get_top_rated_movies()
+    return jsonify([movie.to_dict() for movie in top_rated])
+
+@app.route('/api/movies/genre/<genre>')
+def get_movies_by_genre(genre):
+    """Получение фильмов по жанру"""
+    movies = Movie.query.filter(Movie.genre.like(f'%{genre}%')).order_by(desc(Movie.rating)).all()
+    return jsonify([movie.to_dict() for movie in movies])
+
+
+# Добавьте этот код в app.py после других маршрутов для фильмов
+
+@app.route('/api/movies/search')
+def search_movies():
+    """Поиск фильмов по названию"""
+    query = request.args.get('q', '').strip()
+    
+    if not query:
+        return jsonify([])
+    
+    # Поиск фильмов, где название содержит поисковый запрос (без учета регистра)
+    movies = Movie.query.filter(
+        Movie.title.ilike(f'%{query}%')
+    ).order_by(
+        desc(Movie.rating)
+    ).all()
+    
+    return jsonify([movie.to_dict() for movie in movies])
+
+
+@app.route('/api/movies/suggest')
+def suggest_movies():
+    """Автодополнение названий фильмов"""
+    query = request.args.get('q', '').strip()
+    
+    if not query or len(query) < 2:
+        return jsonify([])
+    
+    # Получаем первые 5 подходящих названий
+    movies = Movie.query.filter(
+        Movie.title.ilike(f'%{query}%')
+    ).limit(5).all()
+    
+    return jsonify([{'id': m.id, 'title': m.title} for m in movies])
 # ============= РЕКОМЕНДАЦИИ =============
 
 @app.route('/api/recommendations')
@@ -332,25 +388,7 @@ def get_watch_history():
     
     return jsonify(result)
 
-# ============= НОВЫЕ ЭНДПОИНТЫ =============
-
-@app.route('/api/movies/trending')
-def get_trending_movies():
-    """Получение популярных фильмов"""
-    trending = RecommendationSystem.get_trending_movies()
-    return jsonify([movie.to_dict() for movie in trending])
-
-@app.route('/api/movies/top-rated')
-def get_top_rated_movies():
-    """Получение высокооцененных фильмов"""
-    top_rated = RecommendationSystem.get_top_rated_movies()
-    return jsonify([movie.to_dict() for movie in top_rated])
-
-@app.route('/api/movies/genre/<genre>')
-def get_movies_by_genre(genre):
-    """Получение фильмов по жанру"""
-    movies = Movie.query.filter(Movie.genre.like(f'%{genre}%')).order_by(desc(Movie.rating)).all()
-    return jsonify([movie.to_dict() for movie in movies])
+# ============= СТАТИСТИКА =============
 
 @app.route('/api/user/stats')
 def get_user_stats():
@@ -374,6 +412,36 @@ def get_user_stats():
         'liked_count': liked_count,
         'favorite_genre': favorite_genre
     })
+
+# ============= ОБСЛУЖИВАНИЕ ФРОНТЕНДА =============
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_frontend(path):
+    """Обслуживание React приложения"""
+    # Если запрос к API, пропускаем
+    if path.startswith('api/') or path.startswith('images/'):
+        return jsonify({'error': 'Not found'}), 404
+    
+    static_folder = os.path.join(os.path.dirname(__file__), 'static')
+    
+    # Если запрошен конкретный файл и он существует
+    if path and os.path.exists(os.path.join(static_folder, path)):
+        return send_from_directory(static_folder, path)
+    
+    # Для всех остальных запросов возвращаем index.html
+    index_path = os.path.join(static_folder, 'index.html')
+    if os.path.exists(index_path):
+        return send_from_directory(static_folder, 'index.html')
+    
+    return jsonify({'error': 'Frontend not built. Run "npm run build" first.'}), 404
+
+# ============= ОБСЛУЖИВАНИЕ ИЗОБРАЖЕНИЙ =============
+
+@app.route('/images/<path:filename>')
+def serve_images(filename):
+    """Обслуживание изображений"""
+    return send_from_directory('static/images', filename)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

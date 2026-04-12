@@ -1,26 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import { useAuth } from '../contexts/AuthContext';
+import { getUserStats } from '../services/api';
 import './Profile.css';
 
 const Profile = () => {
   const { user } = useAuth();
-  const [savedCount, setSavedCount] = useState(0);
-  const [likedCount, setLikedCount] = useState(0);
+  const [stats, setStats] = useState({
+    watch_count: 0,
+    saved_count: 0,
+    liked_count: 0,
+    favorite_genre: 'не определен'
+  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (user) {
-      const saved = localStorage.getItem(`saved_${user.email}`);
-      const savedMovies = saved ? JSON.parse(saved) : [];
-      setSavedCount(savedMovies.length);
-      
-      const liked = localStorage.getItem(`liked_${user.email}`);
-      const likedClips = liked ? JSON.parse(liked) : [];
-      setLikedCount(likedClips.length);
+      loadStats();
     }
   }, [user]);
 
+  const loadStats = async () => {
+    setLoading(true);
+    const userStats = await getUserStats();
+    setStats(userStats);
+    setLoading(false);
+  };
+
   if (!user) return null;
+
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <div style={{ textAlign: 'center', color: '#d47b7b', padding: '4rem' }}>
+          Загрузка профиля...
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -34,16 +52,23 @@ const Profile = () => {
             <div className="profile-info">
               <h1>{user.username}</h1>
               <p>{user.email}</p>
+              <p style={{ marginTop: '0.5rem', color: '#d47b7b' }}>
+                Любимый жанр: {stats.favorite_genre}
+              </p>
             </div>
           </div>
           
           <div className="profile-stats">
             <div className="stat-item">
-              <div className="stat-value">{savedCount}</div>
+              <div className="stat-value">{stats.saved_count}</div>
               <div className="stat-label">Отложенных фильмов</div>
             </div>
             <div className="stat-item">
-              <div className="stat-value">{likedCount}</div>
+              <div className="stat-value">{stats.watch_count}</div>
+              <div className="stat-label">Просмотрено фильмов</div>
+            </div>
+            <div className="stat-item">
+              <div className="stat-value">{stats.liked_count}</div>
               <div className="stat-label">Понравившихся клипов</div>
             </div>
           </div>
