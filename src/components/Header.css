@@ -95,12 +95,13 @@
   padding: 0.5rem 1.2rem;
   border-radius: 40px;
   transition: 0.2s;
+  
 }
 
 .register-btn:hover,
 .profile-btn:hover,
 .logout-btn:hover {
-  background: #8b1e1e;
+  background: #631809;
   color: #f0e0e0;
 }
 
@@ -109,6 +110,7 @@
   cursor: pointer;
   font-family: inherit;
   font-size: 1rem;
+  color: #f0e0e0;
 }
 
 @media (max-width: 768px) {
