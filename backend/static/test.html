@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Тест видео</title>
+</head>
+<body>
+    <h2>Тест видео</h2>
+    <div>
+        <video controls muted autoplay width="400" height="300">
+            <source src="/videos/clip1.webm" type="video/webm">
+        </video>
+    </div>
+    
+    <div style="margin-top: 20px;">
+        <button onclick="testAPI()">Проверить API</button>
+        <pre id="result"></pre>
+    </div>
+    
+    <script>
+        async function testAPI() {
+            const response = await fetch('/api/clips/local');
+            const data = await response.json();
+            document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+        }
+    </script>
+</body>
+</html>

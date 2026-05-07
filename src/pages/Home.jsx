@@ -1,11 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import MovieCard from '../components/MovieCard';
 import MoviePlayer from '../components/MoviePlayer';
-import { MOVIES } from '../services/api';
+import { getMovies } from '../services/api';
 
 const Home = () => {
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedMovie, setSelectedMovie] = useState(null);
+
+  useEffect(() => {
+    loadMovies();
+  }, []);
+
+  const loadMovies = async () => {
+    setLoading(true);
+    const moviesData = await getMovies();
+    setMovies(moviesData);
+    setLoading(false);
+  };
 
   const containerStyle = {
     maxWidth: '1400px',
@@ -36,13 +49,26 @@ const Home = () => {
     setSelectedMovie(null);
   };
 
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <main style={containerStyle}>
+          <div style={{ textAlign: 'center', color: '#d47b7b', padding: '4rem' }}>
+            Загрузка фильмов...
+          </div>
+        </main>
+      </>
+    );
+  }
+
   return (
     <>
       <Header />
       <main style={containerStyle}>
         <h2 style={titleStyle}>🔴 КАТАЛОГ ФИЛЬМОВ</h2>
         <div style={gridStyle}>
-          {Object.values(MOVIES).map(movie => (
+          {movies.map(movie => (
             <MovieCard
               key={movie.id}
               movie={movie}

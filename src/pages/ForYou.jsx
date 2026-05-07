@@ -1,15 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import MovieCard from '../components/MovieCard';
 import MoviePlayer from '../components/MoviePlayer';
 import { useAuth } from '../contexts/AuthContext';
-import { MOVIES } from '../services/api';
+import { getRecommendations } from '../services/api';
 
 const ForYou = () => {
   const { user } = useAuth();
+  const [recommendations, setRecommendations] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
-  const [hoveredId, setHoveredId] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (user) {
+      loadRecommendations();
+    } else {
+      setLoading(false);
+    }
+  }, [user]);
+
+  const loadRecommendations = async () => {
+    setLoading(true);
+    const recs = await getRecommendations();
+    setRecommendations(recs);
+    setLoading(false);
+  };
 
   const containerStyle = {
     maxWidth: '1400px',
@@ -105,7 +121,20 @@ const ForYou = () => {
     setSelectedMovie(null);
   };
 
-  // Если пользователь не авторизован, показываем форму входа/регистрации
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <main style={containerStyle}>
+          <div style={{ textAlign: 'center', color: '#d47b7b', padding: '4rem' }}>
+            Загрузка рекомендаций...
+          </div>
+        </main>
+      </>
+    );
+  }
+
+  // Если пользователь не авторизован
   if (!user) {
     return (
       <>
@@ -130,7 +159,30 @@ const ForYou = () => {
     );
   }
 
-  // Если пользователь авторизован, показываем рекомендации
+  // Если нет рекомендаций
+  if (recommendations.length === 0) {
+    return (
+      <>
+        <Header />
+        <main style={containerStyle}>
+          <div style={recommendationHeaderStyle}>
+            <h2 style={titleStyle}>🎯 ФИЛЬМЫ ДЛЯ ВАС</h2>
+            <span style={badgeStyle}>персональные рекомендации</span>
+          </div>
+          
+          <div style={noteStyle}>
+            <span style={noteSpanStyle}>{user.username}</span>, смотрите фильмы и клипы, чтобы получать рекомендации! 🔥
+          </div>
+          
+          <div style={{ textAlign: 'center', padding: '4rem', color: '#a16565' }}>
+            <p>Нет рекомендаций. Посмотрите несколько фильмов, чтобы мы могли подобрать для вас лучшие!</p>
+            <Link to="/" style={{ color: '#d47b7b' }}>Перейти к каталогу →</Link>
+          </div>
+        </main>
+      </>
+    );
+  }
+
   return (
     <>
       <Header />
@@ -145,7 +197,7 @@ const ForYou = () => {
         </div>
 
         <div style={gridStyle}>
-          {Object.values(MOVIES).map(movie => (
+          {recommendations.map(movie => (
             <MovieCard
               key={movie.id}
               movie={movie}
