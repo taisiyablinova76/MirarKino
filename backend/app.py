@@ -23,7 +23,7 @@ mimetypes.add_type('video/mp4', '.mp4')
 mimetypes.add_type('video/webm', '.webm')
 mimetypes.add_type('video/ogg', '.ogg')
 
-CORS(app, supports_credentials=True, origins=['http://localhost:3000', 'http://localhost:5000'])
+CORS(app, supports_credentials=True, origins=['http://localhost:3000', 'http://localhost:5000', 'http://127.0.0.1:3000', 'http://127.0.0.1:5000'])
 
 db.init_app(app)
 
