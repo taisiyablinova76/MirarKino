@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../components/Header';
 import MovieCard from '../components/MovieCard';
 import MoviePlayer from '../components/MoviePlayer';
 import { getMovies } from '../services/api';
@@ -52,7 +51,7 @@ const Home = () => {
   if (loading) {
     return (
       <>
-        <Header />
+        
         <main style={containerStyle}>
           <div style={{ textAlign: 'center', color: '#d47b7b', padding: '4rem' }}>
             Загрузка фильмов...
@@ -64,7 +63,7 @@ const Home = () => {
 
   return (
     <>
-      <Header />
+      
       <main style={containerStyle}>
         <h2 style={titleStyle}>🔴 КАТАЛОГ ФИЛЬМОВ</h2>
         <div style={gridStyle}>

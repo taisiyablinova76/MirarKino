@@ -1,7 +1,6 @@
 // src/pages/SearchResults.jsx
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import Header from '../components/Header';
 import MovieCard from '../components/MovieCard';
 import { searchMovies } from '../services/api';
 
@@ -26,7 +25,7 @@ const SearchResults = () => {
 
   return (
     <>
-      <Header />
+      
       <div className="main-content">
         <h1 className="catalog-title">
           Результаты поиска: "{query}"

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+
+// ✅ Страницы
 import Home from './pages/Home';
 import ForYou from './pages/ForYou';
 import Clips from './pages/Clips';
@@ -9,7 +11,11 @@ import Profile from './pages/Profile';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import SearchResults from './pages/SearchResults';
+
+// ✅ Компоненты
+import Header from './components/Header'; // ← ДОБАВЛЕНО: импорт Header
 import MoviePlayer from './components/MoviePlayer';
+
 import './App.css';
 
 function App() {
@@ -18,7 +24,6 @@ function App() {
   useEffect(() => {
     const handleOpenMoviePlayer = (event) => {
       setCurrentMovie(event.detail);
-      // Добавляем класс для блокировки скролла
       document.body.classList.add('player-open');
     };
 
@@ -39,6 +44,9 @@ function App() {
     <AuthProvider>
       <Router>
         <div className="App">
+          {/* ✅ ДОБАВЛЕНО: шапка отображается на всех страницах */}
+          <Header />
+          
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/for-you" element={<ForYou />} />

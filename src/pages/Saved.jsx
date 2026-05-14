@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Header from '../components/Header';
 import MovieCard from '../components/MovieCard';
 import MoviePlayer from '../components/MoviePlayer';
 import { useAuth } from '../contexts/AuthContext';
@@ -129,7 +128,7 @@ const Saved = () => {
   if (loading) {
     return (
       <>
-        <Header />
+        
         <main style={containerStyle}>
           <div style={{ textAlign: 'center', color: '#d47b7b', padding: '4rem' }}>
             Загрузка сохраненных фильмов...
@@ -143,7 +142,7 @@ const Saved = () => {
   if (!user) {
     return (
       <>
-        <Header />
+        
         <main style={containerStyle}>
           <div style={headerStyle}>
             <h1 style={titleStyle}>📌 ОТЛОЖЕННЫЕ</h1>
@@ -167,7 +166,7 @@ const Saved = () => {
   if (savedMovies.length === 0) {
     return (
       <>
-        <Header />
+        
         <main style={containerStyle}>
           <div style={headerStyle}>
             <h1 style={titleStyle}>📌 ОТЛОЖЕННЫЕ</h1>
@@ -191,7 +190,7 @@ const Saved = () => {
   // Если есть сохраненные фильмы, показываем их
   return (
     <>
-      <Header />
+      
       <main style={containerStyle}>
         <div style={headerStyle}>
           <h1 style={titleStyle}>📌 ОТЛОЖЕННЫЕ</h1>

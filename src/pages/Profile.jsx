@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../components/Header';
 import { useAuth } from '../contexts/AuthContext';
 import { getUserStats } from '../services/api';
 import './Profile.css';
@@ -32,7 +31,7 @@ const Profile = () => {
   if (loading) {
     return (
       <>
-        <Header />
+        
         <div style={{ textAlign: 'center', color: '#d47b7b', padding: '4rem' }}>
           Загрузка профиля...
         </div>
@@ -42,7 +41,7 @@ const Profile = () => {
 
   return (
     <>
-      <Header />
+      
       <main className="profile-container">
         <div className="profile-card">
           <div className="profile-header">

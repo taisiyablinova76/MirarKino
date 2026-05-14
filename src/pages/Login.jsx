@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
 import { useAuth } from '../contexts/AuthContext';
 
 const Login = () => {
@@ -112,7 +111,7 @@ const Login = () => {
 
   return (
     <>
-      <Header />
+      
       <main style={containerStyle}>
         <div style={cardStyle}>
           <h1 style={titleStyle}>ВХОД В АККАУНТ</h1>

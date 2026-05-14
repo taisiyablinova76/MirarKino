@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../components/Header';
 import { useAuth } from '../contexts/AuthContext';
 
 const Register = () => {
@@ -122,7 +121,7 @@ const Register = () => {
 
   return (
     <>
-      <Header />
+      
       <main style={containerStyle}>
         <div style={cardStyle}>
           <h1 style={{ textAlign: 'center', color: '#eed4d4', marginBottom: '2rem' }}>СОЗДАТЬ АККАУНТ</h1>

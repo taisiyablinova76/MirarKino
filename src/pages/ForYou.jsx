@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Header from '../components/Header';
 import MovieCard from '../components/MovieCard';
 import MoviePlayer from '../components/MoviePlayer';
 import { useAuth } from '../contexts/AuthContext';
@@ -124,7 +123,6 @@ const ForYou = () => {
   if (loading) {
     return (
       <>
-        <Header />
         <main style={containerStyle}>
           <div style={{ textAlign: 'center', color: '#d47b7b', padding: '4rem' }}>
             Загрузка рекомендаций...
@@ -138,7 +136,6 @@ const ForYou = () => {
   if (!user) {
     return (
       <>
-        <Header />
         <main style={containerStyle}>
           <div style={recommendationHeaderStyle}>
             <h2 style={titleStyle}>🎯 ФИЛЬМЫ ДЛЯ ВАС</h2>
@@ -163,7 +160,6 @@ const ForYou = () => {
   if (recommendations.length === 0) {
     return (
       <>
-        <Header />
         <main style={containerStyle}>
           <div style={recommendationHeaderStyle}>
             <h2 style={titleStyle}>🎯 ФИЛЬМЫ ДЛЯ ВАС</h2>
@@ -185,7 +181,6 @@ const ForYou = () => {
 
   return (
     <>
-      <Header />
       <main style={containerStyle}>
         <div style={recommendationHeaderStyle}>
           <h2 style={titleStyle}>🎯 ФИЛЬМЫ ДЛЯ ВАС</h2>

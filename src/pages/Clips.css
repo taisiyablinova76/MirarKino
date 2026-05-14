@@ -4,6 +4,7 @@
   scroll-snap-type: y mandatory;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  padding-top: 10px;
 }
 
 .clips-container::-webkit-scrollbar {
